@@ -1,5 +1,33 @@
 @import "tailwindcss";
 
+
+:root {
+  /* Color base */
+  --color-primary: #2d3748; /* bg-gray-800 */
+  --color-primary-light: #4a5568; /* Más claro que bg-gray-800 */
+  --color-primary-dark: #1a202c; /* Más oscuro que bg-gray-800 */
+
+  /* Color de texto */
+  --color-text-light: #f7fafc; /* Blanco */
+  --color-text-dark: #2d3748;  /* Texto oscuro */
+
+  /* Fondo */
+  --color-background-light: #edf2f7; /* Fondo claro */
+  --color-background-dark: #1a202c;  /* Fondo oscuro */
+
+  /* Bordes */
+  --color-border-light: #e2e8f0; /* Bordes más claros */
+  --color-border-dark: #2b2b2b;  /* Bordes más oscuros */
+
+  /* Colores secundarios */
+  --color-secondary: #edf2f7; /* Fondo claro */
+  --color-secondary-dark: #e2e8f0; /* Fondo oscuro para segundo plano */
+
+  /* Colores de énfasis */
+  --color-accent: #38b2ac;  /* Un color para resaltar botones o links */
+  --color-accent-dark: #319795; /* Más oscuro que el color de acento */
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -20,7 +48,52 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background-dark);
+  color: var(--color-text-light);
+  font-family: 'Inter', sans-serif; /* Por ejemplo */
+}
+
+/* Ejemplo de colores en algunos elementos */
+h1, h2, h3 {
+  color: var(--color-text-dark);
+}
+
+a {
+  color: var(--color-accent);
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--color-accent-dark);
+}
+
+button {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--color-primary-light);
+}
+
+button:active {
+  background-color: var(--color-primary-dark);
+}
+
+/* Añadir más estilos como bordes, fondo de tarjetas, etc. */
+.card {
+  background-color: var(--color-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.card-dark {
+  background-color: var(--color-primary-dark);
+  border: 1px solid var(--color-border-dark);
 }
