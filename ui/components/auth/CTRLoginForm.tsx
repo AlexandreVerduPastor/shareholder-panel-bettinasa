@@ -1,22 +1,36 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { toast, Toaster } from "react-hot-toast";
 
 const LoginPage = () => {
+    return (
+        <Suspense fallback={<div>Cargando...</div>}>
+            <LoginContent />
+        </Suspense>
+    );
+};
+
+const LoginContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     useEffect(() => {
         const error = searchParams.get("error");
         if (error) {
-            const errorMessage = process.env['NEXT_PUBLIC_' + error] || "Error desconocido";
-            console.log('NEXT_PUBLIC_'+error, process.env['NEXT_PUBLIC_' + error]);
+            const message = process.env[`NEXT_PUBLIC_${error}`] || "Error desconocido";
+            setErrorMessage(message);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (errorMessage) {
             showToast("error", errorMessage);
         }
-    }, [searchParams]);
+    }, [errorMessage]);
 
     const showToast = (type: "success" | "error", message: string) => {
         toast.custom(
@@ -29,15 +43,10 @@ const LoginPage = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         const email = e.currentTarget.email.value;
         const password = e.currentTarget.password.value;
 
-        const res = await signIn("credentials", {
-            email,
-            password,
-            redirect: false, // Evita la redirección automática
-        });
+        const res = await signIn("credentials", { email, password, redirect: false });
 
         if (res?.error) {
             router.push(`/login?error=CredentialsSignin`);
@@ -48,7 +57,6 @@ const LoginPage = () => {
 
     return (
         <div className="flex h-screen">
-            
             <div className="hidden lg:flex items-center justify-center flex-1 bg-black bg-opacity-50 relative">
                 <div className="absolute inset-0 bg-[url('/images/_DSC0629-min.jpg')] bg-cover bg-center opacity-30"></div>
             </div>
@@ -63,18 +71,18 @@ const LoginPage = () => {
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                             <input type="text" id="email" name="email"
-                                   className="bg-white text-black mt-1 p-2 w-full border rounded-md focus:border-gray-300 focus:ring-2 focus:ring-gray-200"/>
+                                className="bg-white text-black mt-1 p-2 w-full border rounded-md focus:border-gray-300 focus:ring-2 focus:ring-gray-200"/>
                         </div>
 
                         <div className="mt-3">
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña</label>
                             <input type="password" id="password" name="password"
-                                   className="bg-white text-black mt-1 p-2 w-full border rounded-md focus:border-gray-300 focus:ring-2 focus:ring-gray-200"/>
+                                className="bg-white text-black mt-1 p-2 w-full border rounded-md focus:border-gray-300 focus:ring-2 focus:ring-gray-200"/>
                         </div>
 
                         <div className="mt-6">
                             <button type="submit"
-                                    className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300">
+                                className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300">
                                 Iniciar sesión
                             </button>
                         </div>
