@@ -48,8 +48,10 @@ const LoginPage = () => {
 
     return (
         <div className="flex h-screen">
-            {/* Sección izquierda (opcional) */}
-            <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black"></div>
+            
+            <div className="hidden lg:flex items-center justify-center flex-1 bg-black bg-opacity-50 relative">
+                <div className="absolute inset-0 bg-[url('/images/_DSC0629-min.jpg')] bg-cover bg-center opacity-30"></div>
+            </div>
 
             {/* Formulario de login */}
             <div className="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">

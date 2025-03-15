@@ -1,26 +1,23 @@
 
-import { signOut } from 'next-auth/react';
 
 const Sidebar = () => {
     return (
-        <div className="w-64 bg-gray-800 text-white flex flex-col">
-            <div className="flex-1 p-4">
-                <h2 className="text-2xl font-bold">Admin Panel</h2>
-                <nav className="mt-8">
-
-                    <ul>
+        <div className="w-64 bg-gray-800 font-bold border-r-1 border-gray-950  text-white flex flex-col">
+            <nav>
+            <ul className="mt-2">
                         <li>
-                            <a href="#" className="block py-2 px-4 hover:bg-gray-700 rounded">Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="#" className="block py-2 px-4 hover:bg-gray-700 rounded">Settings</a>
+                            <a href="/dashboard" className="block py-2 px-4 hover:bg-gray-700 rounded">Inicio</a>
                         </li>
 
+                        <a 
+    href="#" 
+    className="block py-2 px-4 rounded bg-gray-800 text-gray-400 cursor-not-allowed opacity-50"
+  >
+    Noticias (próximamente)
+  </a>
+                
                     </ul>
-                </nav>
-            </div>
-
-
+            </nav>
         </div>
     );
 };
