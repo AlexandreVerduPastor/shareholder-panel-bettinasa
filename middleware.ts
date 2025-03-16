@@ -2,26 +2,34 @@ import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest) {
-    const availableRoutes = ["/dashboard"]; // Agrega aquí más rutas permitidas
-
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-    const url = req.nextUrl;
+    const { pathname } = req.nextUrl;
 
-    if (!token && url.pathname !== "/login") {
+    // Rutas permitidas si el usuario tiene sesión activa
+    const protectedRoutes = ["/dashboard"];
+
+    // Permitir acceso a rutas anidadas (Ejemplo: /dashboard/settings)
+    const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+
+    // Si el usuario NO tiene sesión y no está en /login, redirigir a /login
+    if (!token && pathname !== "/login") {
         return NextResponse.redirect(new URL("/login", req.url));
     }
 
-    if (token && url.pathname === "/login") {
+    // Si el usuario tiene sesión y está en /login, redirigir a /dashboard
+    if (token && pathname === "/login") {
         return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 
-    if (token && !availableRoutes.includes(url.pathname)) {
+    // Si el usuario tiene sesión pero está en una ruta no permitida, redirigir a /dashboard
+    if (token && !isProtectedRoute) {
         return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 
     return NextResponse.next();
 }
 
+// ⬇️ Ajustamos el matcher para que no bloquee rutas de Next.js ni API routes
 export const config = {
-    matcher: ["/((?!_next/static|_next/image|favicon.ico|api|images).*)"],
+    matcher: ["/((?!_next|favicon.ico|api/auth).*)"],
 };
