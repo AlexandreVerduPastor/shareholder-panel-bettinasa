@@ -1,7 +1,6 @@
-import "../../globals.css";
-import { SessionProvider } from "next-auth/react";
 import LAYHeader from "@/ui/layouts/LAYHeader";
 import LAYSidebar from "@/ui/layouts/LAYSidebar";
+import "../../globals.css";
 
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

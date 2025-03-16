@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Suspense } from "react";
 import { toast, Toaster } from "react-hot-toast";
 
 const LoginPage = () => {
@@ -15,22 +15,6 @@ const LoginPage = () => {
 
 const LoginContent = () => {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-    useEffect(() => {
-        const error = searchParams.get("error");
-        if (error) {
-            const message = process.env[`NEXT_PUBLIC_${error}`] || "Error desconocido";
-            setErrorMessage(message);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (errorMessage) {
-            showToast("error", errorMessage);
-        }
-    }, [errorMessage]);
 
     const showToast = (type: "success" | "error", message: string) => {
         toast.custom(
@@ -50,6 +34,7 @@ const LoginContent = () => {
 
         if (res?.error) {
             router.push(`/login?error=CredentialsSignin`);
+            showToast("error", 'Error de creedenciales');
         } else {
             router.push("/dashboard");
         }
