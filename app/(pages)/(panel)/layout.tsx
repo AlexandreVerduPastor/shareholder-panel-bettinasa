@@ -6,7 +6,6 @@ import LAYSidebar from "@/ui/layouts/LAYSidebar";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <SessionProvider>
             <html lang="en">
             <head></head>
             <body>
@@ -22,6 +21,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
             </body>
             </html>
-        </SessionProvider>
     );
 }
