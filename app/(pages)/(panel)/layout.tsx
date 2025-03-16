@@ -1,4 +1,3 @@
-"use client"
 import "../../globals.css";
 import { SessionProvider } from "next-auth/react";
 import LAYHeader from "@/ui/layouts/LAYHeader";
