@@ -5,36 +5,34 @@ export async function middleware(req: NextRequest) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     const { pathname } = req.nextUrl;
 
-    // ✅ Permitir archivos estáticos (imágenes, CSS, JS, etc.)
+    // ✅ Permitir archivos estáticos o rutas públicas especiales
     if (
-        pathname.startsWith("/_next/") || // Archivos de Next.js
-        pathname.startsWith("/images/") || // Tus imágenes en /public/images/
-        pathname.startsWith("/favicon.ico") || // Ícono del sitio
-        pathname.startsWith("/api/auth") // Rutas de autenticación
+        pathname.startsWith("/_next/") ||
+        pathname.startsWith("/images/") ||
+        pathname.startsWith("/favicon.ico") ||
+        pathname.startsWith("/api/auth") ||
+        pathname.startsWith("/api/register")
     ) {
         return NextResponse.next();
     }
 
-    // 🔒 Rutas protegidas (requieren sesión)
+    // 🔒 Rutas protegidas
     const protectedRoutes = ["/dashboard"];
     const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
 
-    if (!token && pathname !== "/login") {
+    // 🔐 Si intenta acceder a una ruta protegida sin token → login
+    if (!token && isProtectedRoute) {
         return NextResponse.redirect(new URL("/login", req.url));
     }
 
+    // ✅ Si está autenticado y quiere ir al login, lo mandamos al dashboard
     if (token && pathname === "/login") {
-        return NextResponse.redirect(new URL("/dashboard", req.url));
-    }
-
-    if (token && !isProtectedRoute) {
         return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 
     return NextResponse.next();
 }
 
-
 export const config = {
-    matcher: ["/((?!_next|api/auth).*)"], // Eliminamos "public" porque Next.js ya lo maneja internamente
+    matcher: ["/((?!_next|api/auth).*)"],
 };
