@@ -3,12 +3,18 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightFromBracket, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import CTRChangePassword from "../components/auth/CTRChangePassword";
 import Image from "next/image";
 
-const Header = ({ session }) => {
+const Header = () => {
+  const { data: session } = useSession();
+
+
+
   const [isOpen, setIsOpen] = useState(false);
 
+ 
   return (
     <header className="bg-gray-800 border-b-1 border-gray-950 flex justify-between items-center text-white">
    

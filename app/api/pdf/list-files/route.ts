@@ -9,12 +9,17 @@ const supabase = createClient(
 const bucketName = process.env.SUPABASE_PDF_CONTAINER || "pdfs";
 
 
+
 export async function GET() {
+
+  console.log(process.env.SUPABASE_PDF_CONTAINER);
+
   const { data, error } = await supabase.storage.from(bucketName).list("", {
     limit: 100,
     offset: 0,
     sortBy: { column: "name", order: "asc" },
   });
+
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

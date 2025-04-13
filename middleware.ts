@@ -5,29 +5,40 @@ export async function middleware(req: NextRequest) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     const { pathname } = req.nextUrl;
 
-    // ✅ Permitir archivos estáticos o rutas públicas especiales
+    // ✅ Permitir archivos estáticos o rutas públicas
     if (
         pathname.startsWith("/_next/") ||
         pathname.startsWith("/images/") ||
         pathname.startsWith("/favicon.ico") ||
-        pathname.startsWith("/api/auth") ||
-        pathname.startsWith("/api/register")
+        pathname.startsWith("/api")
     ) {
         return NextResponse.next();
+    }
+
+    // 🌐 Ruta base "/"
+    if (pathname === "/") {
+        return NextResponse.redirect(new URL(token ? "/dashboard" : "/login", req.url));
     }
 
     // 🔒 Rutas protegidas
     const protectedRoutes = ["/dashboard"];
     const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
 
-    // 🔐 Si intenta acceder a una ruta protegida sin token → login
-    if (!token && isProtectedRoute) {
+    if (isProtectedRoute && !token) {
         return NextResponse.redirect(new URL("/login", req.url));
     }
 
-    // ✅ Si está autenticado y quiere ir al login, lo mandamos al dashboard
+    // 🔁 Si va al login estando autenticado → redirigir al dashboard
     if (token && pathname === "/login") {
         return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
+
+    // ❌ Si la ruta no existe (ni pública ni protegida), redirigir según autenticación
+    const knownRoutes = ["/login", "/dashboard", "/api/register"];
+    const isKnownRoute = knownRoutes.some(route => pathname.startsWith(route));
+    
+    if (!isKnownRoute) {
+        return NextResponse.redirect(new URL(token ? "/dashboard" : "/login", req.url));
     }
 
     return NextResponse.next();

@@ -20,6 +20,7 @@ export default function CTRDashboardPdf() {
       } catch (error) {
         console.error("Error al obtener los PDFs", error);
       } finally {
+       
         setLoading(false);
       }
     };
